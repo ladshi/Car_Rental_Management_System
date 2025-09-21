@@ -1,0 +1,58 @@
+@model CarRentalManagementSystem.DTOs.CustomerResponseDTO
+
+<div class="container mt-4">
+    <h2>Admin Profile</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <form asp-action="Profile" asp-controller="Account" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Display Name</label>
+                    <input class="form-control" asp-for="FullName" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Profile Image</label>
+                    <input type="file" name="imageFile" class="form-control" accept="image/*" id="adminProfileImageInput" />
+                    <div class="mt-2">
+                        <img id="adminProfilePreview" src="@(Model?.ImageUrl ?? string.Empty)" alt="preview" class="avatar-preview @(string.IsNullOrEmpty(Model?.ImageUrl) ? "d-none" : string.Empty)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+    @section Scripts {
+        <script>
+            (function(){
+                const input = document.getElementById('adminProfileImageInput');
+                const preview = document.getElementById('adminProfilePreview');
+                if (input && preview) {
+                    input.addEventListener('change', function(e){
+                        const file = e.target.files && e.target.files[0];
+                        if (!file) return;
+                        const url = URL.createObjectURL(file);
+                        preview.src = url;
+                        preview.classList.remove('d-none');
+                    });
+                }
+            })();
+        </script>
+    }
+</div>
